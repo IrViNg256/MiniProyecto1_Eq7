@@ -8,7 +8,7 @@ struct contacto
 {
     char nombre[80];
     char genero[8];
-    int telefono;
+    long int telefono;
     char email[100];
 };
 
@@ -70,7 +70,7 @@ void menu()
 void obtener(char* nombre)
 {
     int i = 0;
-    char c, ch;
+    char c;
     do
     {
         c = _getch();
@@ -89,6 +89,7 @@ void obtener(char* nombre)
             printf("\b \b");
         }
     } while (c != 13);
+    *(nombre + i) = '\0';
 }
 
 void iniciar()
@@ -103,7 +104,29 @@ void regresar()
 
 void listar()
 {
-    printf("Listar\n");
+    struct contacto c;
+    FILE* f;
+    f = fopen_s(&f, "proyecto", "rb");
+
+    if (f == NULL)
+    {
+        printf("Error al abrir archivo de guardado");
+        exit(1);
+    }
+
+    while (fread(&c, sizeof(c), 1, f) == 1)
+    {
+        printf("\n\n\nLos contactos almacenados son\n\n");
+        printf("\nNombre: %s \nGenero: %s \nTelefono: %s \nCorreo electronico: \n", c.nombre, c.genero, c.telefono, c.email);
+        _getch();
+        system("cls");
+    }
+
+    fclose(f);
+    printf("\nPresiona cualquier tecla para continuar");
+    getch();
+    system("cls");
+    menu();
 }
 
 void agregar()
@@ -111,6 +134,7 @@ void agregar()
     system("cls");
     FILE* f;
     struct contacto c;
+
     f = fopen_s(&f ,"proyecto", "ab+");
     printf("Ingresa nombre: ");
     obtener(c.nombre);
