@@ -8,12 +8,12 @@ struct contacto
 {
     char nombre[80];
     char genero[8];
-    long int telefono;
+    int telefono;
     char email[100];
 };
 
 void menu();
-void obtener();
+void obtener(char* nombre);
 void iniciar();
 void regresar();
 void listar();
@@ -69,7 +69,7 @@ void menu()
 
 void obtener(char* nombre)
 {
-    int i = 0, j;
+    int i = 0;
     char c, ch;
     do
     {
@@ -86,11 +86,7 @@ void obtener(char* nombre)
             {
                 i--;
             }
-            for (j = 0; j < i; j++)
-            {
-                ch = *(nombre + j);
-                _putch(ch);
-            }
+            printf("\b \b");
         }
     } while (c != 13);
 }
@@ -102,7 +98,7 @@ void iniciar()
 
 void regresar()
 {
-
+    iniciar();
 }
 
 void listar()
@@ -112,7 +108,28 @@ void listar()
 
 void agregar()
 {
-    printf("Agregar\n");
+    system("cls");
+    FILE* f;
+    struct contacto c;
+    f = fopen_s(&f ,"proyecto", "ab+");
+    printf("Ingresa nombre: ");
+    obtener(c.nombre);
+    printf("\nIngresa genero: ");
+    obtener(c.genero);
+    printf("\nIngresa numero de telefono: ");
+    obtener(c.telefono);
+    printf("\nIngresa correo electronico: ");
+    obtener(c.email);
+    fwrite(&c, sizeof(c), 1, f);
+
+    fflush(stdin);
+    printf("\n\nContacto guardado");
+    fclose(f);
+    
+    printf("\n\nPresiona cualquier tecla para continuar");
+    _getch();
+    system("cls");
+    menu();
 }
 
 void buscar()
