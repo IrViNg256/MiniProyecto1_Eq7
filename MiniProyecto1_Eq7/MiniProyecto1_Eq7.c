@@ -158,7 +158,37 @@ void agregar()
 
 void buscar()
 {
-    printf("Buscar\n");
+    struct contacto c;
+    FILE* f;
+    char nombre[100];
+    
+    fopen_s(&f, "proyecto", "rb");
+    if (f == NULL)
+    {
+        printf("Error al abrir archivo de guardado");
+        exit(1);
+    }
+
+    printf("\nIngresa del nombre de la persona a buscar: ");
+    obtener(nombre);
+    while (fread(&c, sizeof(c), 1, f) == 1)
+    {
+        if (strcmp(c.nombre, nombre) == 0)
+        {
+            printf("\nInformación de %s", nombre);
+            printf("\nNombre: %s \nGenero: %s \nTelefono: %s \nCorreo electronico: \n", c.nombre, c.genero, c.telefono, c.email);
+        }
+        else
+        {
+            printf("Contacto no encontrado");
+        }
+    }
+
+    fclose(f);
+    printf("\nPresiona cualquier tecla para continuar");
+    _getch();
+    system("cls");
+    menu();
 }
 
 void editar()
