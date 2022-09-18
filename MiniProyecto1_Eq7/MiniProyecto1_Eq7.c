@@ -198,5 +198,59 @@ void editar()
 
 void borrar()
 {
-    printf("Borrar\n");
+    struct contacto c;
+    FILE* f, * tf;
+    int bandera;
+    char nombre[100];
+    
+    fopen_s(&f, "proyecto", "rb");
+    if (f == NULL)
+    {
+        printf("Error al abrir archivo de guardado");
+    }
+    else
+    {
+        tf = fopen_s(tf, "temp", "wb+");
+        if (tf == NULL)
+        {
+            printf("Error al abrir archivo temporal");
+        }
+        else
+        {
+            printf("Ingresa el nombre del contacto a borrar: ");
+            obtener(nombre);
+
+            fflush(stdin);
+            while (fread(&c, sizeof(c), 1, f) == 1)
+            {
+                if (strcmp(c.nombre, nombre) != 0)
+                {
+                    fwrite(&c, sizeof(c), 1, tf);
+                }
+                if (strcmp(c.nombre, nombre) == 0)
+                {
+                    bandera = 1;
+                }
+            }
+
+            fclose(f);
+            fclose(tf);
+
+            if (bandera != 1)
+            {
+                printf("No se encuentra el contacto para borrar");
+            }
+            else
+            {
+                remove("proeycto");
+                rename("temp.txt", "proyecto");
+                printf("Contacto borrado correctamente");
+            }
+        }
+    }
+
+    printf("\nPresiona cualquier tecla para continuar");
+    _getch();
+    system("cls");
+    menu();
 }
