@@ -124,7 +124,7 @@ void listar()
 
     fclose(f);
     printf("\nPresiona cualquier tecla para continuar");
-    getch();
+    _getch();
     system("cls");
     menu();
 }
@@ -141,7 +141,7 @@ void agregar()
     printf("\nIngresa genero: ");
     obtener(c.genero);
     printf("\nIngresa numero de telefono: ");
-    obtener(c.telefono);
+    scanf_s("%ld", &c.telefono);
     printf("\nIngresa correo electronico: ");
     obtener(c.email);
     fwrite(&c, sizeof(c), 1, f);
@@ -193,7 +193,61 @@ void buscar()
 
 void editar()
 {
-    printf("Editar\n");
+    int tam;
+    FILE* f;
+    int bandera = 0;
+    struct contacto c, e;
+    char nombre[100];
+
+    f = fopen_s(&f, "proyecto", "rb+");
+    if (f == NULL)
+    {
+        printf("Error al abrir archivo de guardado");
+        exit(1);
+    }
+    else
+    {
+        system("cls");
+        printf("Ingresa el nombre del contacto a editar: ");
+        obtener(nombre);
+        while (fread(&c, sizeof(c), 1, f) == 1)
+        {
+            if (strcmp(nombre, c.nombre) == 0)
+            {
+                printf("Ingresa nombre: ");
+                obtener(e.nombre);
+                printf("\nIngresa genero: ");
+                obtener(e.genero);
+                printf("\nIngresa numero de telefono: ");
+                scanf_s("%ld", &e.telefono);
+                printf("\nIngresa correo electronico: ");
+                obtener(e.email);
+
+                tam = sizeof(c);
+                fseek(f, -tam, SEEK_CUR);
+                fwrite(&e, sizeof(c), 1, f);
+                bandera = 1;
+                break;
+            }
+
+            fflush(stdin);
+        }
+
+        if (bandera == 1)
+        {
+            printf("\nLos datos han sido editados");
+        }
+        else
+        {
+            printf("\nNo se encontraron los datos");
+        }
+        fclose(f);
+    }
+
+    printf("\nPresiona cualquier tecla para continuar");
+    _getch();
+    system("cls");
+    menu();
 }
 
 void borrar()
@@ -210,7 +264,7 @@ void borrar()
     }
     else
     {
-        tf = fopen_s(tf, "temp", "wb+");
+        tf = fopen_s(&tf, "temp", "wb+");
         if (tf == NULL)
         {
             printf("Error al abrir archivo temporal");
